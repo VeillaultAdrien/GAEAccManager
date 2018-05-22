@@ -3,14 +3,16 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
+import exception.QueryException;
+
 @Entity
-public class Bank_Client {
+public class Bank_Client{
 	@Id public String lastName;
 	@Index public String firstName;
 	public float account;
 	public Boolean risk;
 	
-	public Bank_Client(String lastName, String firstName, float account, Boolean risk) {
+	public Bank_Client(String lastName, String firstName, float account, Boolean risk) throws QueryException {
 		super();
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -32,7 +34,7 @@ public class Bank_Client {
 	
 	@Override
     public String toString() {
-		String json = String.format("Bank_Client [lastName=", lastName, ", firstName=", firstName,", account=", account, ", risk=", risk );
+		String json = String.format("Bank_Client {lastName=", lastName, ", firstName=", firstName,", account=", account, ", risk=", risk, "}" );
         return json;
     }
 }

@@ -2,9 +2,7 @@ package accManager;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-import java.lang.reflect.Array;
-import java.util.Iterator;
-import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -12,9 +10,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
-import com.googlecode.objectify.Key;
+import org.apache.commons.lang3.StringUtils;
+
 import com.googlecode.objectify.ObjectifyService;
+
+import exception.QueryException;
 
 @Path("/serv")
 public class Bank_Client_Management {
@@ -24,11 +27,28 @@ public class Bank_Client_Management {
 		}
 
 	@GET
-    @Path("ajout")
-    @Produces("text/html")
-     public String createClient(){
-		ofy().save().entity(new Bank_Client("Truc", "John", 20000, false)).now();
-		return ("<html><body><h1>Client ajouté !</h1></body></html>");
+    @Path("ajout/{lastName}/{firstName}/{account}")
+    @Produces(MediaType.APPLICATION_JSON)
+     public String createClient(@PathParam("lastName") String ln, @PathParam("firstName") String fn, @PathParam("account") int acc) throws QueryException{
+		
+		try{
+			if(ln.matches("^[a-zA-Z]+$"))
+			{ofy().save().entity(new Bank_Client(ln, fn, acc, false)).now();
+			Bank_Client c = ofy().load().type(Bank_Client.class).id(ln).now();
+			return c.toString();}
+			else throw new QueryException(ln+" is not a string");
+		}
+			catch (QueryException q) {
+				q.setHttpError(400);
+				q.setMessage(ln + " is not a string");
+				q.setType("Error in the last name");
+				Response.status(Status.BAD_REQUEST).entity(q).build();
+				return q.toString();}
+			
+//			return q.toString();
+			
+		
+		
 	}
 	
 	//suppression
@@ -41,7 +61,7 @@ public class Bank_Client_Management {
 		return ("<html><body><h1>Client supprimé !</h1></body></html>");
 	}
 	
-	//liste
+	//list
 	@GET
 	@Path("list/{name}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -50,26 +70,6 @@ public class Bank_Client_Management {
 		return c;
 	}
 	
-	@GET
-	@Path("list")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Bank_Client[] listClient() {
-//		Iterable<Key<Bank_Client>> allKeys = ofy().load().type(Bank_Client.class).keys();
-//		List<Bank_Client> c = ofy().load().type(Bank_Client.class).keys(allKeys);
-		
-		Iterable<Bank_Client> c = ofy().load().type(Bank_Client.class);
-
-		System.out.println(c);
-		Iterator<Bank_Client> iterator = c.iterator();
-		Bank_Client[] listClient = new Bank_Client[100];
-		while (iterator.hasNext()){
-			int i = 0;
-			Bank_Client next = iterator.next();
-			listClient[i] = next;
-			i++;
-		}
-		return listClient;
-	}
 	
 
 }
