@@ -46,8 +46,16 @@ public class QueryException extends Exception{
 	
 	@Override
 	public String toString() {
-		String json =String.format("QueryException {type=", type ,", message=", message,", httpError=", httpError, "}" );
-		System.out.println(json);
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("QueryException {type=");
+		buffer.append(type);
+		buffer.append(", message=");
+		buffer.append(message);
+		buffer.append(", httpError=");
+		buffer.append(httpError);
+		buffer.append("}");
+        String json = buffer.toString();
 		return json;
 	}
 }
+

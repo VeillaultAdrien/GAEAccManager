@@ -34,7 +34,18 @@ public class Bank_Client{
 	
 	@Override
     public String toString() {
-		String json = String.format("Bank_Client {lastName=", lastName, ", firstName=", firstName,", account=", account, ", risk=", risk, "}" );
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("Bank_Client {lastName=");
+		buffer.append(lastName);
+		buffer.append(", firstName=");
+		buffer.append(firstName);
+		buffer.append(", account=");
+		buffer.append(account);
+		buffer.append(", risk=");
+		buffer.append(risk);
+		buffer.append("}");
+        String json = buffer.toString();
         return json;
     }
 }
+
