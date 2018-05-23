@@ -2,6 +2,7 @@ package accManager;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.ws.rs.DELETE;
@@ -68,6 +69,20 @@ public class Bank_Client_Management {
 	public Bank_Client listClient(@PathParam("name") String n) {
 		Bank_Client c = ofy().load().type(Bank_Client.class).id(n).now();
 		return c;
+	}
+	
+	@GET
+	@Path("list")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String listAllClient() {
+		List<Bank_Client> c = ofy().load().type(Bank_Client.class).list();
+		String json = "";
+		StringBuffer buffer = new StringBuffer();
+		for (Bank_Client i : c) {
+			buffer.append(i.toString());
+		}
+		json = buffer.toString();
+		return json;
 	}
 	
 	

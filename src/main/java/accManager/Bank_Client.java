@@ -1,4 +1,6 @@
 package accManager;
+import java.util.UUID;
+
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -7,8 +9,9 @@ import exception.QueryException;
 
 @Entity
 public class Bank_Client{
-	@Id public String lastName;
-	@Index public String firstName;
+	@Id public String id;
+	@Index public String lastName;
+	public String firstName;
 	public float account;
 	public Boolean risk;
 	
@@ -18,6 +21,8 @@ public class Bank_Client{
 		this.firstName = firstName;
 		this.account = account;
 		this.risk = risk;
+		UUID uuid = UUID.randomUUID();
+		this.id = uuid.toString();
 	}
 	
 	public Bank_Client() {
@@ -35,7 +40,9 @@ public class Bank_Client{
 	@Override
     public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("Bank_Client {lastName=");
+		buffer.append("Bank_Client {id=");
+		buffer.append(id);
+		buffer.append(", lastName=");
 		buffer.append(lastName);
 		buffer.append(", firstName=");
 		buffer.append(firstName);
