@@ -15,8 +15,15 @@ public class QueryException extends Exception{
 	public int httpError;
 	
 	
-	public QueryException(String m) {
+	public QueryException(String m, String t) {
 		super(m);
+		this.setHttpError(400);
+		this.setMessage(m);
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("Error in the ");
+		buffer.append(t);
+		this.setType(buffer.toString());
+		Response.status(Status.BAD_REQUEST).entity(this).build();
 
 	}
 	

@@ -28,28 +28,43 @@ public class Bank_Client_Management {
 		}
 
 	@GET
-    @Path("ajout/{lastName}/{firstName}/{account}")
+    @Path("ajout/{lastName}/{firstName}/{account}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-     public String createClient(@PathParam("lastName") String ln, @PathParam("firstName") String fn, @PathParam("account") int acc) throws QueryException{
+     public String createClient(@PathParam("lastName") String ln, @PathParam("firstName") String fn, @PathParam("account") String acc, @PathParam("id") String id) throws QueryException{
 		
 		try{
-			if(ln.matches("^[a-zA-Z]+$"))
-			{ofy().save().entity(new Bank_Client(ln, fn, acc, false)).now();
-			Bank_Client c = ofy().load().type(Bank_Client.class).id(ln).now();
-			return c.toString();}
-			else throw new QueryException(ln+" is not a string");
-		}
-			catch (QueryException q) {
-				q.setHttpError(400);
-				q.setMessage(ln + " is not a string");
-				q.setType("Error in the last name");
-				Response.status(Status.BAD_REQUEST).entity(q).build();
-				return q.toString();}
-			
-//			return q.toString();
-			
-		
-		
+			if(ln.matches("^[a-zA-Z]+$")){
+				if(fn.matches("^[a-zA-Z]+$")) {
+					if(acc.matches("^[0-9]+$")) {
+						if(id.matches("^[0-9]+$")) {
+							ofy().save().entity(new Bank_Client(ln, fn, acc, false, id)).now();
+							Bank_Client c = ofy().load().type(Bank_Client.class).id(id).now();
+							return c.toString();
+						} else {
+							String m = this.queryExceptionMessage(id);
+							throw new QueryException(m, "id");
+						}
+					} else {
+					String m = this.queryExceptionMessage(acc);
+					throw new QueryException(m, "account");
+				}				
+			} else {
+				String m = this.queryExceptionMessage(fn);
+				throw new QueryException(m, "first name");
+				}}
+			else {
+				String m = this.queryExceptionMessage(ln);
+				throw new QueryException(m, "lastname");
+			}
+	}
+		catch (QueryException q) {return q.toString();}		
+	}
+	
+	public String queryExceptionMessage(String error) throws QueryException {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(error);
+		buffer.append(" bad value.");
+		return buffer.toString();
 	}
 	
 	//suppression
