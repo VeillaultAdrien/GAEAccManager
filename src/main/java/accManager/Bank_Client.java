@@ -8,19 +8,17 @@ import exception.QueryException;
 
 @Entity
 public class Bank_Client{
-	@Id String id;
-	@Index public String lastName;
-	public String firstName;
+	@Id public String lastName;
+	@Index public String firstName;
 	public String account;
 	public Boolean risk;
 	
-	public Bank_Client(String lastName, String firstName, String account, Boolean risk, String id) throws QueryException {
+	public Bank_Client(String lastName, String firstName, String account, Boolean risk) throws QueryException {
 		super();
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.account = account;
 		this.risk = risk;
-		this.id = id;
 		
 	}
 	
@@ -36,11 +34,14 @@ public class Bank_Client{
 		this.risk = risk;
 	}
 	
+	public void setAccount(String account) {
+		this.account = account;
+	}
+	
 	@Override
     public String toString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("Bank_Client {id=");
-		buffer.append(id);
+		buffer.append("Bank_Client");
 		buffer.append(", lastName=");
 		buffer.append(lastName);
 		buffer.append(", firstName=");
